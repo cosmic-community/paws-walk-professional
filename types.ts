@@ -54,6 +54,26 @@ export interface Testimonial extends CosmicObject {
   };
 }
 
+// About page type definition
+export interface AboutPage extends CosmicObject {
+  type: 'pages';
+  metadata: {
+    page_title: string;
+    hero_heading: string;
+    hero_description: string;
+    mission_statement: string;
+    our_story: string;
+    hero_image?: {
+      url: string;
+      imgix_url: string;
+    };
+    stats?: Array<{
+      label: string;
+      value: string;
+    }>;
+  };
+}
+
 // Booking type definition
 export interface Booking extends CosmicObject {
   type: 'bookings';

@@ -1,6 +1,5 @@
-// Cosmic SDK configuration and helper functions
 import { createBucketClient } from '@cosmicjs/sdk'
-import type { Service, StaffMember, Testimonial, Booking, CosmicResponse, BookingFormData } from '@/types'
+import type { Service, StaffMember, Testimonial, AboutPage, Booking, CosmicResponse, BookingFormData } from '@/types'
 
 export const cosmic = createBucketClient({
   bucketSlug: process.env.COSMIC_BUCKET_SLUG as string,
@@ -108,6 +107,24 @@ export async function getStaffBySlug(slug: string): Promise<StaffMember | null> 
     }
     console.error('Error fetching staff member:', error)
     throw new Error('Failed to fetch staff member')
+  }
+}
+
+// Fetch About page content
+export async function getAboutPage(): Promise<AboutPage | null> {
+  try {
+    const response = await cosmic.objects
+      .findOne({ type: 'pages', slug: 'about' })
+      .props(['id', 'title', 'slug', 'metadata'])
+      .depth(1)
+    
+    return response.object as AboutPage
+  } catch (error) {
+    if (hasStatus(error) && error.status === 404) {
+      return null
+    }
+    console.error('Error fetching about page:', error)
+    throw new Error('Failed to fetch about page')
   }
 }
 
