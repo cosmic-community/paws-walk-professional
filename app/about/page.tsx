@@ -15,6 +15,9 @@ export default async function AboutPage() {
 
   const { metadata: content } = aboutPage
 
+  // Changed: Ensure stats is an array before mapping
+  const statsArray = Array.isArray(content.stats) ? content.stats : []
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -43,11 +46,11 @@ export default async function AboutPage() {
       </section>
 
       {/* Stats Section */}
-      {content.stats && content.stats.length > 0 && (
+      {statsArray.length > 0 && (
         <section className="py-16 px-4 bg-white">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {content.stats.map((stat: { label: string; value: string }, index: number) => (
+              {statsArray.map((stat: { label: string; value: string }, index: number) => (
                 <div key={index} className="text-center">
                   <div className="text-4xl md:text-5xl font-bold text-primary mb-2">
                     {stat.value}
