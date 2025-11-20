@@ -91,6 +91,52 @@ export interface Booking extends CosmicObject {
   };
 }
 
+// Blog Author type definition
+export interface Author extends CosmicObject {
+  type: 'authors';
+  metadata: {
+    name: string;
+    bio: string;
+    role: string;
+    profile_image?: {
+      url: string;
+      imgix_url: string;
+    };
+  };
+}
+
+// Blog Category type definition
+export interface Category extends CosmicObject {
+  type: 'categories';
+  metadata: {
+    name: string;
+    description: string;
+    color: string;
+  };
+}
+
+// Blog Post type definition
+export interface Post extends CosmicObject {
+  type: 'posts';
+  metadata: {
+    title: string;
+    excerpt: string;
+    content: string;
+    featured_image?: {
+      url: string;
+      imgix_url: string;
+    };
+    author: Author;
+    categories: Category[];
+    published_date: string;
+    reading_time: string;
+    seo_title: string;
+    seo_description: string;
+    seo_keywords: string;
+    location_tags?: string;
+  };
+}
+
 // API response types
 export interface CosmicResponse<T> {
   objects: T[];

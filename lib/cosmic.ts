@@ -1,5 +1,5 @@
 import { createBucketClient } from '@cosmicjs/sdk'
-import type { Service, StaffMember, Testimonial, AboutPage, Booking, CosmicResponse, BookingFormData } from '@/types'
+import type { Service, StaffMember, Testimonial, AboutPage, Booking, CosmicResponse, BookingFormData, Post, Author, Category } from '@/types'
 
 export const cosmic = createBucketClient({
   bucketSlug: process.env.COSMIC_BUCKET_SLUG as string,
@@ -152,5 +152,135 @@ export async function createBooking(bookingData: BookingFormData): Promise<Booki
   } catch (error) {
     console.error('Error creating booking:', error)
     throw new Error('Failed to create booking')
+  }
+}
+
+// Fetch all blog posts
+export async function getPosts(): Promise<Post[]> {
+  try {
+    const response = await cosmic.objects
+      .find({ type: 'posts' })
+      .props(['id', 'title', 'slug', 'metadata', 'created_at'])
+      .depth(1)
+    
+    const posts = response.objects as Post[]
+    
+    // Sort by published_date descending (newest first)
+    return posts.sort((a, b) => {
+      const dateA = new Date(a.metadata?.published_date || a.created_at).getTime()
+      const dateB = new Date(b.metadata?.published_date || b.created_at).getTime()
+      return dateB - dateA
+    })
+  } catch (error) {
+    if (hasStatus(error) && error.status === 404) {
+      return []
+    }
+    console.error('Error fetching posts:', error)
+    throw new Error('Failed to fetch posts')
+  }
+}
+
+// Fetch a single blog post by slug
+export async function getPostBySlug(slug: string): Promise<Post | null> {
+  try {
+    const response = await cosmic.objects
+      .findOne({ type: 'posts', slug })
+      .props(['id', 'title', 'slug', 'metadata', 'created_at'])
+      .depth(1)
+    
+    return response.object as Post
+  } catch (error) {
+    if (hasStatus(error) && error.status === 404) {
+      return null
+    }
+    console.error('Error fetching post:', error)
+    throw new Error('Failed to fetch post')
+  }
+}
+
+// Fetch all authors
+export async function getAuthors(): Promise<Author[]> {
+  try {
+    const response = await cosmic.objects
+      .find({ type: 'authors' })
+      .props(['id', 'title', 'slug', 'metadata'])
+      .depth(1)
+    
+    return response.objects as Author[]
+  } catch (error) {
+    if (hasStatus(error) && error.status === 404) {
+      return []
+    }
+    console.error('Error fetching authors:', error)
+    throw new Error('Failed to fetch authors')
+  }
+}
+
+// Fetch a single author by slug
+export async function getAuthorBySlug(slug: string): Promise<Author | null> {
+  try {
+    const response = await cosmic.objects
+      .findOne({ type: 'authors', slug })
+      .props(['id', 'title', 'slug', 'metadata'])
+      .depth(1)
+    
+    return response.object as Author
+  } catch (error) {
+    if (hasStatus(error) && error.status === 404) {
+      return null
+    }
+    console.error('Error fetching author:', error)
+    throw new Error('Failed to fetch author')
+  }
+}
+
+// Fetch all categories
+export async function getCategories(): Promise<Category[]> {
+  try {
+    const response = await cosmic.objects
+      .find({ type: 'categories' })
+      .props(['id', 'title', 'slug', 'metadata'])
+      .depth(1)
+    
+    return response.objects as Category[]
+  } catch (error) {
+    if (hasStatus(error) && error.status === 404) {
+      return []
+    }
+    console.error('Error fetching categories:', error)
+    throw new Error('Failed to fetch categories')
+  }
+}
+
+// Fetch posts by category slug
+export async function getPostsByCategory(categorySlug: string): Promise<Post[]> {
+  try {
+    const posts = await getPosts()
+    
+    // Filter posts that have the category
+    return posts.filter(post => {
+      const categories = post.metadata?.categories
+      if (!categories || !Array.isArray(categories)) return false
+      return categories.some((cat: Category) => cat.slug === categorySlug)
+    })
+  } catch (error) {
+    console.error('Error fetching posts by category:', error)
+    return []
+  }
+}
+
+// Fetch posts by author slug
+export async function getPostsByAuthor(authorSlug: string): Promise<Post[]> {
+  try {
+    const posts = await getPosts()
+    
+    // Filter posts by author
+    return posts.filter(post => {
+      const author = post.metadata?.author
+      return author && author.slug === authorSlug
+    })
+  } catch (error) {
+    console.error('Error fetching posts by author:', error)
+    return []
   }
 }
