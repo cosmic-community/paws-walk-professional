@@ -1,11 +1,13 @@
-// Service card component
+'use client'
+
 import type { Service } from '@/types'
 
 interface ServiceCardProps {
   service: Service
+  onBookClick: (service: Service) => void
 }
 
-export default function ServiceCard({ service }: ServiceCardProps) {
+export default function ServiceCard({ service, onBookClick }: ServiceCardProps) {
   const imageUrl = service.metadata?.service_image?.imgix_url
   const features = service.metadata?.features?.split('\n').filter(Boolean) || []
 
@@ -42,7 +44,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
         </div>
 
         {features.length > 0 && (
-          <div className="border-t pt-4">
+          <div className="border-t pt-4 mb-4">
             <h4 className="font-semibold text-gray-900 mb-2">Features:</h4>
             <ul className="space-y-1">
               {features.map((feature, index) => (
@@ -53,6 +55,13 @@ export default function ServiceCard({ service }: ServiceCardProps) {
             </ul>
           </div>
         )}
+
+        <button
+          onClick={() => onBookClick(service)}
+          className="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition-colors font-medium"
+        >
+          Book This Service
+        </button>
       </div>
     </div>
   )
