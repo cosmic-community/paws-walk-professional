@@ -39,7 +39,7 @@ export default async function BlogPage() {
               >
                 All Posts
               </Link>
-              {categories.map((category) => (
+              {categories.filter(category => category && category.metadata && category.metadata.name).map((category) => (
                 <Link
                   key={category.id}
                   href={`/blog/category/${category.slug}`}
@@ -77,7 +77,7 @@ export default async function BlogPage() {
                     {/* Categories */}
                     {post.metadata?.categories && Array.isArray(post.metadata.categories) && post.metadata.categories.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-3">
-                        {post.metadata.categories.map((category) => (
+                        {post.metadata.categories.filter(category => category && category.metadata && category.metadata.name).map((category) => (
                           <Link
                             key={category.id}
                             href={`/blog/category/${category.slug}`}
@@ -99,26 +99,28 @@ export default async function BlogPage() {
                       {post.metadata.excerpt}
                     </p>
 
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <div className="flex items-center gap-2">
-                        {post.metadata?.author?.metadata?.profile_image && (
-                          <img
-                            src={`${post.metadata.author.metadata.profile_image.imgix_url}?w=80&h=80&fit=crop&auto=format,compress`}
-                            alt={post.metadata.author.metadata.name}
-                            className="w-8 h-8 rounded-full"
-                          />
+                    {post.metadata?.author && post.metadata.author.metadata && (
+                      <div className="flex items-center justify-between text-sm text-gray-500">
+                        <div className="flex items-center gap-2">
+                          {post.metadata.author.metadata.profile_image && (
+                            <img
+                              src={`${post.metadata.author.metadata.profile_image.imgix_url}?w=80&h=80&fit=crop&auto=format,compress`}
+                              alt={post.metadata.author.metadata.name || 'Author'}
+                              className="w-8 h-8 rounded-full"
+                            />
+                          )}
+                          <Link
+                            href={`/blog/author/${post.metadata.author.slug}`}
+                            className="hover:text-primary"
+                          >
+                            {post.metadata.author.metadata.name || 'Anonymous'}
+                          </Link>
+                        </div>
+                        {post.metadata?.reading_time && (
+                          <span>{post.metadata.reading_time}</span>
                         )}
-                        <Link
-                          href={`/blog/author/${post.metadata.author.slug}`}
-                          className="hover:text-primary"
-                        >
-                          {post.metadata.author.metadata.name}
-                        </Link>
                       </div>
-                      {post.metadata?.reading_time && (
-                        <span>{post.metadata.reading_time}</span>
-                      )}
-                    </div>
+                    )}
                   </div>
                 </article>
               ))}

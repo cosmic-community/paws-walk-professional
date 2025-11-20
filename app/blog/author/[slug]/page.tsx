@@ -74,9 +74,11 @@ export default async function AuthorPage({ params }: Props) {
                   {author.metadata.role}
                 </p>
               )}
-              <p className="text-xl text-gray-100 max-w-3xl">
-                {author.metadata.bio}
-              </p>
+              {author.metadata.bio && (
+                <p className="text-xl text-gray-100 max-w-3xl">
+                  {author.metadata.bio}
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -116,7 +118,7 @@ export default async function AuthorPage({ params }: Props) {
                     {/* Categories */}
                     {post.metadata?.categories && Array.isArray(post.metadata.categories) && post.metadata.categories.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-3">
-                        {post.metadata.categories.map((category) => (
+                        {post.metadata.categories.filter(category => category && category.metadata && category.metadata.name).map((category) => (
                           <Link
                             key={category.id}
                             href={`/blog/category/${category.slug}`}

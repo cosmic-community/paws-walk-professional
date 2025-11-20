@@ -76,7 +76,7 @@ export default async function CategoryPage({ params }: Props) {
             >
               All Posts
             </Link>
-            {categories.map((cat) => (
+            {categories.filter(cat => cat && cat.metadata && cat.metadata.name).map((cat) => (
               <Link
                 key={cat.id}
                 href={`/blog/category/${cat.slug}`}
@@ -130,26 +130,28 @@ export default async function CategoryPage({ params }: Props) {
                       {post.metadata.excerpt}
                     </p>
 
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <div className="flex items-center gap-2">
-                        {post.metadata?.author?.metadata?.profile_image && (
-                          <img
-                            src={`${post.metadata.author.metadata.profile_image.imgix_url}?w=80&h=80&fit=crop&auto=format,compress`}
-                            alt={post.metadata.author.metadata.name}
-                            className="w-8 h-8 rounded-full"
-                          />
+                    {post.metadata?.author && post.metadata.author.metadata && (
+                      <div className="flex items-center justify-between text-sm text-gray-500">
+                        <div className="flex items-center gap-2">
+                          {post.metadata.author.metadata.profile_image && (
+                            <img
+                              src={`${post.metadata.author.metadata.profile_image.imgix_url}?w=80&h=80&fit=crop&auto=format,compress`}
+                              alt={post.metadata.author.metadata.name || 'Author'}
+                              className="w-8 h-8 rounded-full"
+                            />
+                          )}
+                          <Link
+                            href={`/blog/author/${post.metadata.author.slug}`}
+                            className="hover:text-primary"
+                          >
+                            {post.metadata.author.metadata.name || 'Anonymous'}
+                          </Link>
+                        </div>
+                        {post.metadata?.reading_time && (
+                          <span>{post.metadata.reading_time}</span>
                         )}
-                        <Link
-                          href={`/blog/author/${post.metadata.author.slug}`}
-                          className="hover:text-primary"
-                        >
-                          {post.metadata.author.metadata.name}
-                        </Link>
                       </div>
-                      {post.metadata?.reading_time && (
-                        <span>{post.metadata.reading_time}</span>
-                      )}
-                    </div>
+                    )}
                   </div>
                 </article>
               ))}

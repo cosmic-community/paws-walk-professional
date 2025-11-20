@@ -63,7 +63,7 @@ export default async function BlogPostPage({ params }: Props) {
         {/* Categories */}
         {metadata.categories && Array.isArray(metadata.categories) && metadata.categories.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-6">
-            {metadata.categories.map((category) => (
+            {metadata.categories.filter(category => category && category.metadata && category.metadata.name).map((category) => (
               <Link
                 key={category.id}
                 href={`/blog/category/${category.slug}`}
@@ -81,34 +81,36 @@ export default async function BlogPostPage({ params }: Props) {
         </h1>
 
         {/* Author and Meta */}
-        <div className="flex items-center gap-4 mb-8 pb-8 border-b">
-          <div className="flex items-center gap-3">
-            {metadata.author?.metadata?.profile_image && (
-              <img
-                src={`${metadata.author.metadata.profile_image.imgix_url}?w=120&h=120&fit=crop&auto=format,compress`}
-                alt={metadata.author.metadata.name}
-                className="w-12 h-12 rounded-full"
-              />
-            )}
-            <div>
-              <Link
-                href={`/blog/author/${metadata.author.slug}`}
-                className="font-semibold text-gray-900 hover:text-primary"
-              >
-                {metadata.author.metadata.name}
-              </Link>
-              <div className="flex items-center gap-3 text-sm text-gray-600">
-                <time dateTime={metadata.published_date}>{publishedDate}</time>
-                {metadata.reading_time && (
-                  <>
-                    <span>•</span>
-                    <span>{metadata.reading_time}</span>
-                  </>
-                )}
+        {metadata.author && metadata.author.metadata && (
+          <div className="flex items-center gap-4 mb-8 pb-8 border-b">
+            <div className="flex items-center gap-3">
+              {metadata.author.metadata.profile_image && (
+                <img
+                  src={`${metadata.author.metadata.profile_image.imgix_url}?w=120&h=120&fit=crop&auto=format,compress`}
+                  alt={metadata.author.metadata.name || 'Author'}
+                  className="w-12 h-12 rounded-full"
+                />
+              )}
+              <div>
+                <Link
+                  href={`/blog/author/${metadata.author.slug}`}
+                  className="font-semibold text-gray-900 hover:text-primary"
+                >
+                  {metadata.author.metadata.name || 'Anonymous'}
+                </Link>
+                <div className="flex items-center gap-3 text-sm text-gray-600">
+                  <time dateTime={metadata.published_date}>{publishedDate}</time>
+                  {metadata.reading_time && (
+                    <>
+                      <span>•</span>
+                      <span>{metadata.reading_time}</span>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Featured Image */}
         {metadata.featured_image && (
@@ -146,29 +148,31 @@ export default async function BlogPostPage({ params }: Props) {
         )}
 
         {/* Author Bio */}
-        {metadata.author && (
+        {metadata.author && metadata.author.metadata && (
           <div className="mt-12 p-8 bg-gray-50 rounded-lg">
             <h3 className="text-xl font-bold text-gray-900 mb-4">About the Author</h3>
             <div className="flex gap-6">
-              {metadata.author.metadata?.profile_image && (
+              {metadata.author.metadata.profile_image && (
                 <img
                   src={`${metadata.author.metadata.profile_image.imgix_url}?w=200&h=200&fit=crop&auto=format,compress`}
-                  alt={metadata.author.metadata.name}
+                  alt={metadata.author.metadata.name || 'Author'}
                   className="w-24 h-24 rounded-full"
                 />
               )}
               <div>
                 <h4 className="font-bold text-lg text-gray-900 mb-1">
-                  {metadata.author.metadata.name}
+                  {metadata.author.metadata.name || 'Anonymous'}
                 </h4>
-                {metadata.author.metadata?.role && (
+                {metadata.author.metadata.role && (
                   <p className="text-primary font-medium mb-3">
                     {metadata.author.metadata.role}
                   </p>
                 )}
-                <p className="text-gray-700">
-                  {metadata.author.metadata.bio}
-                </p>
+                {metadata.author.metadata.bio && (
+                  <p className="text-gray-700">
+                    {metadata.author.metadata.bio}
+                  </p>
+                )}
               </div>
             </div>
           </div>
