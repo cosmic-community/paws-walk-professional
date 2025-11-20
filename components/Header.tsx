@@ -9,13 +9,13 @@ export default function Header() {
           
           <div className="hidden md:flex items-center space-x-8">
             <a
-              href="/#services"
+              href="/services"
               className="text-gray-700 hover:text-primary transition-colors font-medium"
             >
               Services
             </a>
             <a
-              href="/#staff"
+              href="/team"
               className="text-gray-700 hover:text-primary transition-colors font-medium"
             >
               Our Team
@@ -33,7 +33,7 @@ export default function Header() {
               About
             </a>
             <a
-              href="/#testimonials"
+              href="/reviews"
               className="text-gray-700 hover:text-primary transition-colors font-medium"
             >
               Reviews
