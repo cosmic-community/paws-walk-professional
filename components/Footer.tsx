@@ -1,4 +1,3 @@
-// Footer component
 export default function Footer() {
   const currentYear = new Date().getFullYear()
 
@@ -27,6 +26,11 @@ export default function Footer() {
                 </a>
               </li>
               <li>
+                <a href="/blog" className="text-gray-400 hover:text-primary transition-colors">
+                  Blog
+                </a>
+              </li>
+              <li>
                 <a href="#testimonials" className="text-gray-400 hover:text-primary transition-colors">
                   Reviews
                 </a>
@@ -39,7 +43,7 @@ export default function Footer() {
             <ul className="space-y-2 text-gray-400">
               <li>📧 info@pawsandwalk.com</li>
               <li>📞 (555) 123-4567</li>
-              <li>📍 123 Pet Street, Dog City</li>
+              <li>📍 Serving Dublin, Pleasanton & San Ramon, CA</li>
             </ul>
           </div>
         </div>
