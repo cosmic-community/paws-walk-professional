@@ -1,10 +1,17 @@
-// Cosmic SDK configuration and helper functions
 import { createBucketClient } from '@cosmicjs/sdk'
-import type { Service, StaffMember, Testimonial, AboutPage, CosmicResponse } from '@/types'
+import type { Service, StaffMember, Testimonial, AboutPage, Booking, CosmicResponse, BookingFormData } from '@/types'
 
 export const cosmic = createBucketClient({
   bucketSlug: process.env.COSMIC_BUCKET_SLUG as string,
   readKey: process.env.COSMIC_READ_KEY as string,
+  apiEnvironment: 'staging'
+})
+
+// Server-side cosmic client with write access
+export const cosmicWrite = createBucketClient({
+  bucketSlug: process.env.COSMIC_BUCKET_SLUG as string,
+  readKey: process.env.COSMIC_READ_KEY as string,
+  writeKey: process.env.COSMIC_WRITE_KEY as string,
   apiEnvironment: 'staging'
 })
 
@@ -118,5 +125,32 @@ export async function getAboutPage(): Promise<AboutPage | null> {
     }
     console.error('Error fetching about page:', error)
     throw new Error('Failed to fetch about page')
+  }
+}
+
+// Create a new booking
+export async function createBooking(bookingData: BookingFormData): Promise<Booking> {
+  try {
+    const response = await cosmicWrite.objects.insertOne({
+      title: `Booking: ${bookingData.customerName} - ${bookingData.serviceName}`,
+      type: 'bookings',
+      metadata: {
+        customer_name: bookingData.customerName,
+        customer_email: bookingData.customerEmail,
+        customer_phone: bookingData.customerPhone,
+        dog_name: bookingData.dogName,
+        dog_breed: bookingData.dogBreed || '',
+        service_name: bookingData.serviceName,
+        preferred_date: bookingData.preferredDate,
+        preferred_time: bookingData.preferredTime,
+        special_instructions: bookingData.specialInstructions || '',
+        booking_status: 'Pending'
+      }
+    })
+    
+    return response.object as Booking
+  } catch (error) {
+    console.error('Error creating booking:', error)
+    throw new Error('Failed to create booking')
   }
 }

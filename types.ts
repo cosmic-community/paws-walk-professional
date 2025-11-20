@@ -74,8 +74,38 @@ export interface AboutPage extends CosmicObject {
   };
 }
 
+// Booking type definition
+export interface Booking extends CosmicObject {
+  type: 'bookings';
+  metadata: {
+    customer_name: string;
+    customer_email: string;
+    customer_phone: string;
+    dog_name: string;
+    dog_breed?: string;
+    service_name: string;
+    preferred_date: string;
+    preferred_time: string;
+    special_instructions?: string;
+    booking_status: string;
+  };
+}
+
 // API response types
 export interface CosmicResponse<T> {
   objects: T[];
   total: number;
+}
+
+// Booking form data interface
+export interface BookingFormData {
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  dogName: string;
+  dogBreed?: string;
+  serviceName: string;
+  preferredDate: string;
+  preferredTime: string;
+  specialInstructions?: string;
 }
