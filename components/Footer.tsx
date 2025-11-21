@@ -1,3 +1,5 @@
+import { Facebook, Instagram, Twitter, Mail } from 'lucide-react'
+
 export default function Footer() {
   const currentYear = new Date().getFullYear()
 
@@ -10,6 +12,43 @@ export default function Footer() {
             <p className="text-gray-400 mb-4">
               Professional dog walking services with experienced, caring staff.
             </p>
+            {/* Social Media Links */}
+            <div className="flex gap-4 mt-6">
+              <a 
+                href="https://facebook.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-primary transition-colors"
+                aria-label="Facebook"
+              >
+                <Facebook size={24} />
+              </a>
+              <a 
+                href="https://instagram.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-primary transition-colors"
+                aria-label="Instagram"
+              >
+                <Instagram size={24} />
+              </a>
+              <a 
+                href="https://twitter.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-primary transition-colors"
+                aria-label="Twitter"
+              >
+                <Twitter size={24} />
+              </a>
+              <a 
+                href="mailto:info@pawsandwalk.com"
+                className="text-gray-400 hover:text-primary transition-colors"
+                aria-label="Email"
+              >
+                <Mail size={24} />
+              </a>
+            </div>
           </div>
 
           <div>
